@@ -1,36 +1,46 @@
+import fcntl
+import glob
+import gzip
+import io
+import json
+import logging
+import os
+import random
 import re
 import shutil
-import urllib
-import io
-
-import requests
 import time
+import urllib
 import uuid
-import json
-import os
-import logging
-import jwt
-import glob
-import pytest
-import fcntl
 from datetime import datetime, timedelta
-from dateutil import parser, tz
 from functools import reduce
 from urllib import parse
 from urllib.parse import urlencode
+
+import jwt
 import nbformat as nbf
+import pytest
+import requests
 import yaml
-import gzip
-import random
-import string
+from dateutil import parser, tz
 
 from cdci_data_analysis.analysis.catalog import BasicCatalog
-from cdci_data_analysis.pytest_fixtures import DispatcherJobState, ask, make_hash, dispatcher_fetch_dummy_products, make_hash_file
-from cdci_data_analysis.flask_app.dispatcher_query import InstrumentQueryBackEnd
-from cdci_data_analysis.analysis.renku_helper import clone_renku_repo, checkout_branch_renku_repo, check_job_id_branch_is_present, get_repo_path, generate_commit_request_url, create_new_notebook_with_code, generate_nb_hash, create_renku_ini_config_obj, generate_ini_file_hash
-from cdci_data_analysis.analysis.drupal_helper import execute_drupal_request, get_drupal_request_headers, get_revnum, get_observations_for_time_range, generate_gallery_jwt_token, get_user_id, get_source_astrophysical_entity_id_by_source_name
-from cdci_data_analysis.plugins.dummy_plugin.data_server_dispatcher import DataServerQuery, ReturnProgressProductQuery
+from cdci_data_analysis.analysis.drupal_helper import (
+    execute_drupal_request, generate_gallery_jwt_token,
+    get_drupal_request_headers, get_observations_for_time_range, get_revnum,
+    get_source_astrophysical_entity_id_by_source_name, get_user_id)
+from cdci_data_analysis.analysis.renku_helper import (
+    check_job_id_branch_is_present, checkout_branch_renku_repo,
+    clone_renku_repo, create_new_notebook_with_code,
+    create_renku_ini_config_obj, generate_commit_request_url,
+    generate_ini_file_hash, generate_nb_hash, get_repo_path)
 from cdci_data_analysis.flask_app.app import sanitize_dict_before_log
+from cdci_data_analysis.flask_app.dispatcher_query import \
+    InstrumentQueryBackEnd
+from cdci_data_analysis.plugins.dummy_plugin.data_server_dispatcher import (
+    DataServerQuery, ReturnProgressProductQuery)
+from cdci_data_analysis.pytest_fixtures import (
+    DispatcherJobState, ask, dispatcher_fetch_dummy_products, make_hash,
+    make_hash_file)
 
 # logger
 logger = logging.getLogger(__name__)
