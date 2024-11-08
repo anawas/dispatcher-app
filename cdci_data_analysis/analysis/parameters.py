@@ -552,6 +552,7 @@ class Parameter:
                                             "but %s doesn't have such keyword, "
                                             "so it will be discarded for the instantiation"),
                                             owl_uri, par_kw, restr, python_subclass)
+                                raise ValueError()
                     
                     for par_name, par_value in kwargs.items():
                         if var_kw_signature or par_name in call_signature.parameters:
